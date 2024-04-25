@@ -51,6 +51,11 @@ const reduser = (state, action) => {
           return item;
         }),
       };
+      case "INITIALIZE_MEALS":
+      return {
+        ...state,
+        meals: action.payload,
+      };
     default:
       return state;
   }
@@ -67,9 +72,16 @@ export const StoreProvider = ({ children }) => {
     setIsModalOpen(false)
   }
 
+  // useEffect(() => {
+  //   localStorage.setItem("meal", JSON.stringify(state.meals));
+  // }, [state.meals]);
+
   useEffect(() => {
-    localStorage.setItem("meal", JSON.stringify(state.meals));
-  }, [state.meals]);
+    const savedMeals = localStorage.getItem("meal");
+    if (savedMeals) {
+      dispatch({ type: "INITIALIZE_MEALS", payload: JSON.parse(savedMeals) });
+    }
+  }, []);
 
   const incMeal = (id) => {
     dispatch({ type: "INC_MEAL", payload: id });
